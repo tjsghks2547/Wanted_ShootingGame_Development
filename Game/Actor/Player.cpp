@@ -1,6 +1,9 @@
 #include "Player.h"
+
 #include "Core/Input.h"
 #include "Engine/Engine.h"
+#include "Actor/PlayerBullet.h"
+#include "Level/Level.h"
 
 
 
@@ -21,9 +24,15 @@ Player::~Player()
 
 void Player::Tick(float deltaTime)
 {
-	//super::Tick(deltaTime);
-	//
+	super::Tick(deltaTime);	
 
+	// 종료 처리. 
+	if (Input::Get().GetKeyDown(VK_ESCAPE))
+	{
+		// 게임 종료
+		QuitGame();
+	}
+	
 	//// 좌우 방향키 입력처리 
 	if (Input::Get().GetKey(VK_LEFT))
 	{
@@ -33,6 +42,12 @@ void Player::Tick(float deltaTime)
 	if (Input::Get().GetKey(VK_RIGHT))
 	{
 		MoveRight();
+	}
+
+
+	if (Input::Get().GetKey(VK_SPACE))
+	{
+		Fire();
 	}
 }
 
@@ -66,5 +81,15 @@ void Player::MoveLeft()
 
 
 
+
+}
+
+void Player::Fire()
+{
+	// 위치 설정
+	Vector2 bulletPosition(position.x + (width / 2),position.y);
+
+	// 액터 설정 
+	GetOwner()->AddNewActor(new PlayerBullet(bulletPosition));
 
 }
